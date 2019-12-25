@@ -19,15 +19,15 @@ public class SimpleController {
         return Mono.just(language);
     }
 
-    @GetMapping("/greeting")
-    public Mono<Greeting> getGreeting() {
+    @GetMapping(value = { "/", "/greeting" })
+    public Mono<Greeting> getGreeting() throws Exception {
         String s = getLocalLanguage().block();
         switch (s) {
             case "spanish":
                 return Mono.just(new Greeting("Hola Mundo!"));
 
             case "chinese":
-                return Mono.just(new Greeting("Ni hao, shijie"));
+                return Mono.just(new Greeting("Ni Hao, Shijie!"));
 
             case "english":
             default:
