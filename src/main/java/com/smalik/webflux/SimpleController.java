@@ -5,13 +5,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @RestController
 public class SimpleController {
 
-    private String language;
+    private final String language;
+    private final Map<String, String> greetings = Map.of(
+        "spanish", "Hola Mundo!",
+        "chinese", "Ni Hao, Shijie!",
+//        "french", "Bonjour le monde!",
+        "english", "Hello World!");
 
-    public SimpleController(@Value("${greeting.language:english}") String language) {
-        this.language = language;
+    public SimpleController(@Value("${greeting.language:}") String language) {
+        if (greetings.containsKey(language)) {
+            this.language = language;
+        } else {
+            this.language = "english";
+        }
     }
 
     @GetMapping("/language")
@@ -20,18 +31,8 @@ public class SimpleController {
     }
 
     @GetMapping(value = { "/", "/greeting" })
-    public Mono<Greeting> getGreeting() throws Exception {
-        String s = getLocalLanguage().block();
-        switch (s) {
-            case "spanish":
-                return Mono.just(new Greeting("Hola Mundo!"));
-
-            case "chinese":
-                return Mono.just(new Greeting("Ni Hao, Shijie!"));
-
-            case "english":
-            default:
-                return Mono.just(new Greeting("Hello World!"));
-        }
+    public Mono<Greeting> getGreeting() {
+        return getLocalLanguage()
+            .map(lang -> new Greeting(greetings.get(lang)));
     }
 }

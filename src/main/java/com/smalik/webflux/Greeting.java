@@ -10,10 +10,14 @@ public class Greeting {
     private Instant time;
     private String host;
 
-    public Greeting(String message) throws UnknownHostException {
-        this.time = Instant.now();
-        this.host = InetAddress.getLocalHost().getHostName();
+    public Greeting(String message) {
+        try {
+            this.host = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            this.host = "UNKNOWN";
+        }
         this.message = message;
+        this.time = Instant.now();
     }
 
     public String getMessage() {
