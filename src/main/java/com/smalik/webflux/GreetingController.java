@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @RestController
-public class SimpleController {
+public class GreetingController {
 
     private final String language;
     private final Map<String, String> greetings = Map.of(
@@ -17,7 +17,7 @@ public class SimpleController {
 //        "french", "Bonjour le monde!",
         "english", "Hello World!");
 
-    public SimpleController(@Value("${greeting.language:}") String language) {
+    public GreetingController(@Value("${greeting.language:}") String language) {
         if (greetings.containsKey(language)) {
             this.language = language;
         } else {
